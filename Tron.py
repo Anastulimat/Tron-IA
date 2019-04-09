@@ -33,7 +33,7 @@ def InitPartie():
     
     Grille = []
     for i in range(LARGEUR):
-        Grille.append([0] * HAUTEUR )
+        Grille.append([0] * HAUTEUR)
     
     # #positionne les murs de l'arene
     for x in range(LARGEUR):
@@ -46,7 +46,7 @@ def InitPartie():
     
     # position du joueur 1
     PosJ1 = (LARGEUR//2,1)
-    
+
     
 #################################################################################
 #
@@ -55,15 +55,19 @@ def InitPartie():
 def PossibleMoves(PosJ1):
     possibleMoveList = []
     
+    # Droite
     if(Grille[PosJ1[0]+1][PosJ1[1]] == 0):
         possibleMoveList.append((1,0))
         
+    # Gauche
     if(Grille[PosJ1[0]-1][PosJ1[1]] == 0):
         possibleMoveList.append((-1,0))
         
+    # Tout de droit
     if(Grille[PosJ1[0]][PosJ1[1]+1] == 0):
         possibleMoveList.append((0,1))
         
+    # Bas
     if(Grille[PosJ1[0]][PosJ1[1]-1] == 0):
         possibleMoveList.append((0,-1))
     
@@ -91,10 +95,7 @@ def Play():
             return
 
         PosJ = possibleMoveList[number]
-        print(possibleMoveList)
-        
         PosJ1 = (PosJ1[0] + PosJ[0], PosJ1[1] + PosJ[1])
-        print(PosJ1)
         PossibleMoves(PosJ1)
 
         # fin de traitement
@@ -104,9 +105,6 @@ def Play():
         # detection de la collision  
         if ( Grille[PosJ1[0]][PosJ1[1]] != 0 ): return  
        
-   
-    
-    
 ################################################################################
 #    
 # Dessine la grille de jeu
