@@ -11,7 +11,6 @@ plt.show()
 fig,axes = plt.subplots(1,1)
 fig.canvas.set_window_title('TRON')
 
-
 #################################################################################
 #
 #  Parametres du jeu
@@ -68,9 +67,6 @@ def PossibleMoves(PosJ1):
     if(Grille[PosJ1[0]][PosJ1[1]-1] == 0):
         possibleMoveList.append((0,-1))
     
-        
-    #print(len(possibleMoveList))
-    #print(possibleMoveList)
     return possibleMoveList
     
 
@@ -84,47 +80,29 @@ def Play():
     global Scores
     
     while (True):   
-
-      global  PosJ1        
-      
-      Grille[PosJ1[0]][PosJ1[1]] = 1 # laisse la trace de la moto
-      
-      
-      possibleMoveList = PossibleMoves(PosJ1)
-      
-      if(possibleMoveList):
-        number = random.randrange(len(possibleMoveList))
-      else:
-        return
-            
+        global  PosJ1        
         
-
-
-        
-        
+        Grille[PosJ1[0]][PosJ1[1]] = 1 # laisse la trace de la moto
     
-      PosJ = possibleMoveList[number]
-      print(possibleMoveList)
-      
-      
-      PosJ1 = ( PosJ1[0] + PosJ[0]  , PosJ1[1] + PosJ[1]) 
-      
-      print(PosJ1)
-      
-      
-      PossibleMoves(PosJ1)
+        possibleMoveList = PossibleMoves(PosJ1)    
+        if(possibleMoveList):
+            number = random.randrange(len(possibleMoveList))
+        else:
+            return
 
-      #PosJ1 = ( PosJ1[0]  , PosJ1[1] +1)  #deplacement
-    
-      
-      # fin de traitement
-      
-      Scores[0] +=1 
-      Affiche()
-      
-      # detection de la collision  
-      
-      if ( Grille[PosJ1[0]][PosJ1[1]] != 0 ): return  
+        PosJ = possibleMoveList[number]
+        print(possibleMoveList)
+        
+        PosJ1 = (PosJ1[0] + PosJ[0], PosJ1[1] + PosJ[1])
+        print(PosJ1)
+        PossibleMoves(PosJ1)
+
+        # fin de traitement
+        Scores[0] +=1 
+        Affiche()
+        
+        # detection de la collision  
+        if ( Grille[PosJ1[0]][PosJ1[1]] != 0 ): return  
        
    
     
