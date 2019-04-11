@@ -1,6 +1,7 @@
 import random
 import time
 import pprint as pp
+from copy import *
 
 ## fenetre d'affichage
 
@@ -27,7 +28,7 @@ NbPartie = 0   # Nombre de parties effectuées
 Scores = [0 , 0]  # score de la partie / total des scores des differentes parties
 
 def InitPartie():  
-    global Grille, PosJ1, NbPartie, Scores
+    global Grille, PosJ1, NbPartie, Scores, GrilleTemp
     
     NbPartie += 1
     Scores[0] = 0
@@ -46,6 +47,9 @@ def InitPartie():
        Grille[LARGEUR-1][y] = 10
        Grille[0][y] = 10
     
+    GrilleTemp = deepcopy(Grille)
+    
+
     # position du joueur 1
     PosJ1 = (LARGEUR//2,1)
 
@@ -54,28 +58,57 @@ def InitPartie():
 #
 # Déplacement possible du joueur
 
-def PossibleMoves(PosJ1):
+def PossibleMoves(GrilleTemp, PosJ1):
     possibleMoveList = []
     
     # Droite ==> x+1
-    if(Grille[PosJ1[0]+1][PosJ1[1]] == 0):
+    if(GrilleTemp[PosJ1[0]+1][PosJ1[1]] == 0):
         possibleMoveList.append((1,0))
         
     # Gauche  ==> x-1
-    if(Grille[PosJ1[0]-1][PosJ1[1]] == 0):
+    if(GrilleTemp[PosJ1[0]-1][PosJ1[1]] == 0):
         possibleMoveList.append((-1,0))
         
     # Tout de droit ==> y+1
-    if(Grille[PosJ1[0]][PosJ1[1]+1] == 0):
+    if(GrilleTemp[PosJ1[0]][PosJ1[1]+1] == 0):
         possibleMoveList.append((0,1))
         
     # Bas ==> y-1
-    if(Grille[PosJ1[0]][PosJ1[1]-1] == 0):
+    if(GrilleTemp[PosJ1[0]][PosJ1[1]-1] == 0):
         possibleMoveList.append((0,-1))
     
     return possibleMoveList
     
 
+#################################################################################
+#
+# Simulation de parties
+def simulationParties(GrilleTemp, PosJ1):
+    nbrCasesParcurues = 0
+    while(True):
+        directions = PossibleMoves(GrilleTemp, PosJ1)
+        if(len(directions) == 0):
+            return nbrCasesParcurues
+        # Choisir l'index de la direction
+        randomIndexDirection = random.randrange(len(directions))
+        # Déplacement du joueur 
+        PosJ = directions[randomIndexDirection]
+        PosJ1 = (PosJ1[0] + PosJ[0], PosJ1[1] + PosJ[1])
+        GrilleTemp[PosJ1[0]][PosJ1[1]] = 1 # laisse la trace de la moto
+        nbrCasesParcurues += 1
+        
+
+#################################################################################
+#
+# Monte Carlo Approch
+def monteCarlo(Grille, PosJ1, nombreParties):
+    total = 0
+    for i in range(nombreParties):
+        Grille2 = deepcopy(Grille)
+        total += simulationParties(Grille2, PosJ1)
+    return total
+
+        
 
 #################################################################################
 #
@@ -90,16 +123,27 @@ def Play():
         
         Grille[PosJ1[0]][PosJ1[1]] = 1 # laisse la trace de la moto
     
-        possibleMoveList = PossibleMoves(PosJ1)    
+        GrilleTemp = deepcopy(Grille)
+
+        possibleMoveList = PossibleMoves(GrilleTemp, PosJ1)
+        '''
         pp.pprint(possibleMoveList)
         if(possibleMoveList):
             number = random.randrange(len(possibleMoveList))
         else:
             return
+        '''
 
-        PosJ = possibleMoveList[number]
-        PosJ1 = (PosJ1[0] + PosJ[0], PosJ1[1] + PosJ[1])
-        PossibleMoves(PosJ1)
+        maxScorePos = (0, 0)
+        maxScore = 0
+        for currentPos in range(len(possibleMoveList)):
+            currentMonteCarlo = monteCarlo(Grille, possibleMoveList[currentPos], 10)
+            if(maxScore < currentMonteCarlo):
+                maxScore = currentMonteCarlo
+                maxScorePos = possibleMoveList[currentPos]
+
+            
+        PosJ1 = (PosJ1[0] + maxScorePos[0], PosJ1[1] + maxScorePos[1])
 
         # fin de traitement
         Scores[0] +=1 
