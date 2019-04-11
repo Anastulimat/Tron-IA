@@ -1,5 +1,6 @@
 import random
 import time
+import pprint as pp
 
 ## fenetre d'affichage
 
@@ -32,6 +33,7 @@ def InitPartie():
     Scores[0] = 0
     
     Grille = []
+
     for i in range(LARGEUR):
         Grille.append([0] * HAUTEUR)
     
@@ -47,7 +49,7 @@ def InitPartie():
     # position du joueur 1
     PosJ1 = (LARGEUR//2,1)
 
-    
+
 #################################################################################
 #
 # Déplacement possible du joueur
@@ -55,19 +57,19 @@ def InitPartie():
 def PossibleMoves(PosJ1):
     possibleMoveList = []
     
-    # Droite
+    # Droite ==> x+1
     if(Grille[PosJ1[0]+1][PosJ1[1]] == 0):
         possibleMoveList.append((1,0))
         
-    # Gauche
+    # Gauche  ==> x-1
     if(Grille[PosJ1[0]-1][PosJ1[1]] == 0):
         possibleMoveList.append((-1,0))
         
-    # Tout de droit
+    # Tout de droit ==> y+1
     if(Grille[PosJ1[0]][PosJ1[1]+1] == 0):
         possibleMoveList.append((0,1))
         
-    # Bas
+    # Bas ==> y-1
     if(Grille[PosJ1[0]][PosJ1[1]-1] == 0):
         possibleMoveList.append((0,-1))
     
@@ -89,6 +91,7 @@ def Play():
         Grille[PosJ1[0]][PosJ1[1]] = 1 # laisse la trace de la moto
     
         possibleMoveList = PossibleMoves(PosJ1)    
+        pp.pprint(possibleMoveList)
         if(possibleMoveList):
             number = random.randrange(len(possibleMoveList))
         else:
