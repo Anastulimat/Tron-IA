@@ -89,12 +89,13 @@ def simulationParties(GrilleTemp, PosJ1):
         directions = PossibleMoves(GrilleTemp, PosJ1)
         if(len(directions) == 0):
             return nbrCasesParcurues
+        
+        GrilleTemp[PosJ1[0]][PosJ1[1]] = 1 # laisse la trace de la moto
         # Choisir l'index de la direction
         randomIndexDirection = random.randrange(len(directions))
         # Déplacement du joueur 
         PosJ = directions[randomIndexDirection]
         PosJ1 = (PosJ1[0] + PosJ[0], PosJ1[1] + PosJ[1])
-        GrilleTemp[PosJ1[0]][PosJ1[1]] = 1 # laisse la trace de la moto
         nbrCasesParcurues += 1
         
 
